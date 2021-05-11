@@ -9,12 +9,12 @@ from rest_framework import permissions
 
 # Create your views here.
 
-class PersonViewSet(viewsets.ModelViewSet):
+'''class PersonViewSet(viewsets.ModelViewSet):
     queryset = Person.objects.all().order_by('created')
     serializer_class = PersonSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-
+'''
 
 @csrf_exempt
 def people_list(request):
@@ -52,6 +52,10 @@ def people_detail(request,pk):
             serializer.save()
             return JsonResponse(serializer.data)
 
-    return JsonResponse(serializer.errors, status = 400)
+        return JsonResponse(serializer.errors, status = 400)
+    
+    elif request.method == 'DELETE':
+        human.delete()
+        return HttpResponse(status=204)
 
    

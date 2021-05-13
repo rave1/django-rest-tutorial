@@ -1,6 +1,11 @@
 from api.models import Snippet
-from api.serializers import SnippetSerializer
+from api.permissions import IsOwnerOrReadOnly
+from api.serializers import SnippetSerializer, UserSerializer
 from rest_framework import generics
+from django.contrib.auth.models import User
+from rest_framework import permissions
+
+
 # Create your views here.
 
 '''class PersonViewSet(viewsets.ModelViewSet):
@@ -14,12 +19,21 @@ from rest_framework import generics
 class SnippetList(generics.ListCreateAPIView):
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
-
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    def perform_create(self, serializer):       # allows us to associate a user to a code snippet
+        serializer.save(owner=self.request.user)
 class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
 # Mixin based views
@@ -65,7 +79,7 @@ class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
 #         if serializer.is_valid():
 #             serializer.save()
 #             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#         return Response(serializer.errors, stat7us=status.HTTP_400_BAD_REQUEST)
 
 # class PeopleDetail(APIView):
 #     def get_object(self,pk):

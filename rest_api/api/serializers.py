@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from api.models import Person, GENDER_CHOICES, OCCUPATIONS
+from api.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES
 
-class PersonSerializer(serializers.ModelSerializer):
+class SnippetSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Person
-        fields = ['id', 'created','first_name','last_name','gender' ,'occupation']
+        model = Snippet
+        fields = ['id', 'title', 'code', 'linenos', 'language', 'style']
